@@ -5,128 +5,150 @@
 <title>Dashboard Gaji Berkala</title>
 
 <style>
-body{
-  margin:0;
-  font-family:system-ui;
-  background:#f6f8fa;
-}
+body{margin:0;font-family:system-ui;background:#f6f8fa}
 header{
-  background:#24292f;
-  color:white;
-  padding:20px 40px;
-  font-size:26px;
-  font-weight:600;
+  background:#24292f;color:white;padding:16px 40px;
+  display:flex;align-items:center;gap:20px
 }
-.container{ padding:30px 40px; }
+header a{
+  color:white;text-decoration:none;
+  background:#0969da;padding:8px 14px;border-radius:6px;
+  font-weight:600
+}
+header h1{margin:0;font-size:24px}
+.container{padding:25px 40px}
+.toolbar{
+  display:flex;justify-content:space-between;
+  margin-bottom:12px;align-items:center
+}
+.search input{
+  padding:8px 12px;width:280px;
+  border:1px solid #d0d7de;border-radius:6px
+}
+.notice{
+  background:#fff3cd;color:#664d03;
+  padding:10px 16px;border-radius:6px;
+  font-weight:600
+}
 table{
-  width:100%;
-  border-collapse:collapse;
-  background:white;
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
+  width:100%;border-collapse:collapse;background:white;
+  box-shadow:0 6px 18px rgba(0,0,0,.08)
 }
 th{
-  background:#0969da;
-  color:white;
-  padding:12px;
-  text-align:left;
-  position:sticky;
-  top:0;
+  background:#0969da;color:white;padding:12px;
+  text-align:left
 }
-td{
-  padding:10px;
-  border-bottom:1px solid #eaecef;
-}
-tr:hover{ background:#f0f6fc; }
+td{padding:10px;border-bottom:1px solid #eaecef}
+tr:hover{background:#f0f6fc}
 input,select{
-  width:100%;
-  padding:8px;
-  border:1px solid #d0d7de;
-  border-radius:6px;
+  width:100%;padding:7px;border:1px solid #d0d7de;
+  border-radius:6px
 }
+.badge{background:#ddf4ff;color:#0969da;padding:4px 8px;border-radius:20px}
 .btn{
-  background:#2da44e;
-  color:white;
-  padding:6px 12px;
-  border-radius:6px;
-  text-decoration:none;
+  background:#2da44e;color:white;padding:6px 12px;
+  border-radius:6px;text-decoration:none
 }
-.badge{
-  background:#ddf4ff;
-  color:#0969da;
-  padding:4px 8px;
-  border-radius:20px;
-  font-size:13px;
+.paging{margin-top:12px;text-align:right}
+.paging button{
+  padding:6px 12px;border-radius:6px;
+  border:1px solid #d0d7de;background:white;
+  cursor:pointer
+}
+#loading{
+  position:fixed;inset:0;
+  background:rgba(255,255,255,.85);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:600;z-index:99
 }
 </style>
 </head>
 
 <body>
 
-<header>Dashboard Gaji Berkala</header>
+<div id="loading">Loading data Dashboard Gaji Berkala…</div>
+
+<header>
+  <a href="https://rikoantah.github.io/Dasboard-Kepegawaian/">⬅ Back</a>
+  <h1>Dashboard Gaji Berkala</h1>
+</header>
 
 <div class="container">
-<table>
-<thead>
-<tr>
-  <th>Nama</th>
-  <th>NIP</th>
-  <th>Gol</th>
-  <th>Jabatan</th>
-  <th>Folder</th>
-  <th>Waktu</th>
-  <th>Catatan Verifikator</th>
-  <th>No Surat</th>
-</tr>
-</thead>
-<tbody id="tbody"></tbody>
-</table>
+  <div class="toolbar">
+    <div class="search">
+      <input id="q" placeholder="Cari berdasarkan Nama…" onkeyup="search()">
+    </div>
+    <div id="notif"></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nama</th><th>NIP</th><th>Gol</th><th>Jabatan</th>
+        <th>Folder</th><th>Waktu</th><th>Catatan</th><th>No Surat</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <div class="paging">
+    <button onclick="prev()">Prev</button>
+    <button onclick="next()">Next</button>
+  </div>
 </div>
 
 <script>
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxdo698t8A0zeD9N1dDAH02dE9IDordhU5UDR51eY44iuRALwk640wsreIL1nQOIq_o/exec";
-
-let DROPDOWN = [];
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyVU9E17XPEVZy5YYRw8I5VfJBM55jADPp2ZQEjNE5zkkksv5uTsNx77qYLEsjpuzu-/exec";
+let page=1, q="", DROPDOWN=[];
 
 Promise.all([
-  fetch(GAS_URL).then(r=>r.json()),
-  fetch(GAS_URL+"?type=dropdown").then(r=>r.json())
-]).then(([data, dropdown])=>{
-  DROPDOWN = dropdown;
-  render(data);
-});
+  fetch(GAS_URL+"?type=dropdown").then(r=>r.json()),
+  load()
+]).then(d=>DROPDOWN=d[0]);
 
-function render(data){
-  const tb = document.getElementById("tbody");
+function load(){
+  document.getElementById("loading").style.display="flex";
+  return fetch(`${GAS_URL}?page=${page}&q=${encodeURIComponent(q)}`)
+    .then(r=>r.json())
+    .then(draw);
+}
+
+function draw(res){
+  const tb=document.getElementById("tbody");
   tb.innerHTML="";
-  data.forEach(r=>{
-    tb.innerHTML += `
+  res.rows.forEach(r=>{
+    tb.innerHTML+=`
     <tr>
       <td><b>${r.nama}</b></td>
       <td>${r.nip}</td>
       <td><span class="badge">${r.gol}</span></td>
       <td>${r.jabatan}</td>
-      <td>${r.folder ? `<a class="btn" target="_blank" href="${r.folder}">Buka</a>` : "-"}</td>
-      <td>${r.waktu || "-"}</td>
+      <td>${r.folder?`<a class="btn" target="_blank" href="${r.folder}">Buka</a>`:"-"}</td>
+      <td>${r.waktu||"-"}</td>
       <td>
         <select onchange="update(${r.row},'catatan',this.value)">
           ${DROPDOWN.map(d=>`<option ${d===r.catatan?'selected':''}>${d}</option>`).join("")}
         </select>
       </td>
-      <td>
-        <input value="${r.nosurat||""}" 
-          onchange="update(${r.row},'nosurat',this.value)">
-      </td>
+      <td><input value="${r.nosurat||""}" onchange="update(${r.row},'nosurat',this.value)"></td>
     </tr>`;
   });
+
+  document.getElementById("notif").innerHTML =
+    res.pending>0
+    ? `<div class="notice">⚠️ Ada ${res.pending} KGB belum dikerjakan</div>`
+    : "";
+
+  document.getElementById("loading").style.display="none";
 }
 
 function update(row,field,value){
-  fetch(GAS_URL,{
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({row,field,value})
-  });
+  fetch(GAS_URL,{method:"POST",headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({row,field,value})});
 }
+function next(){page++;load()}
+function prev(){if(page>1){page--;load()}}
+function search(){q=document.getElementById("q").value;page=1;load()}
 </script>
 
 </body>
