@@ -13,14 +13,15 @@ header a{background:#0969da;color:#fff;text-decoration:none;padding:8px 14px;bor
 .notice{background:#fff3cd;color:#664d03;padding:10px 16px;border-radius:6px;font-weight:600}
 table{width:100%;border-collapse:collapse;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.08)}
 th{background:#0969da;color:#fff;padding:12px;text-align:left}
-td{padding:10px;border-bottom:1px solid #eaecef}
-tr:hover{background:#f0f6fc}
+td{padding:10px;border-bottom:1px solid #eaecef;vertical-align:top}
 input,select{width:100%;padding:7px;border:1px solid #d0d7de;border-radius:6px}
+.btn{padding:6px 10px;border-radius:6px;border:none;cursor:pointer}
+.btn-save{background:#2da44e;color:#fff}
+.btn-disabled{background:#94d3a2;color:#fff;cursor:not-allowed}
 .badge{background:#ddf4ff;color:#0969da;padding:4px 8px;border-radius:20px}
-.btn{background:#2da44e;color:#fff;padding:6px 12px;border-radius:6px;text-decoration:none}
 .paging{text-align:right;margin-top:10px}
-.paging button{padding:6px 12px;border:1px solid #d0d7de;border-radius:6px;background:#fff;cursor:pointer}
 #loading{position:fixed;inset:0;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600}
+.small{font-size:12px;color:#57606a;margin-top:4px}
 </style>
 </head>
 
@@ -44,7 +45,9 @@ input,select{width:100%;padding:7px;border:1px solid #d0d7de;border-radius:6px}
     <thead>
       <tr>
         <th>Nama</th><th>NIP</th><th>Gol</th><th>Jabatan</th>
-        <th>Folder</th><th>Waktu</th><th>Catatan</th><th>No Surat</th>
+        <th>Folder</th><th>Waktu</th>
+        <th>Catatan Verifikator</th>
+        <th>No Surat</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -57,7 +60,7 @@ input,select{width:100%;padding:7px;border:1px solid #d0d7de;border-radius:6px}
 </div>
 
 <script>
-const GAS_URL = "https://script.google.com/macros/s/AKfycbwJ3BKtCDa3kcH0aqmXcS1OZDkVTvfSUrKO7zYYfvOUTn9KGZwyOaMC0MKk0Qmf_76W/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzuM0YU9MhOMjJ2K8rRbPsEZs-NDu-Dz-WW2MjELyGVHFdPhrFRiXiwxGHQ7F0oLY9x/exec";
 let page=1, q="", DROPDOWN=[];
 
 Promise.all([
@@ -82,32 +85,69 @@ function draw(res){
         <td>${r.nip}</td>
         <td><span class="badge">${r.gol}</span></td>
         <td>${r.jabatan}</td>
-        <td>${r.folder?`<a class="btn" target="_blank" href="${r.folder}">Buka</a>`:"-"}</td>
+        <td>${r.folder?`<a target="_blank" href="${r.folder}">Buka</a>`:"-"}</td>
         <td>${r.waktu||"-"}</td>
+
         <td>
-          <select onchange="update(${r.row},'catatan',this.value)">
+          <select id="cat_${r.row}" onchange="markDirty('cat_${r.row}','btn_cat_${r.row}')">
             ${DROPDOWN.map(d=>`<option ${d===r.catatan?'selected':''}>${d}</option>`).join("")}
           </select>
+          <button id="btn_cat_${r.row}" class="btn btn-disabled" disabled
+            onclick="save(${r.row},'catatan','cat_${r.row}','btn_cat_${r.row}')">
+            Simpan
+          </button>
+          <div class="small">Perlu disimpan</div>
         </td>
+
         <td>
-          <input value="${r.nosurat||""}" onchange="update(${r.row},'nosurat',this.value)">
+          <input id="no_${r.row}" value="${r.nosurat||""}"
+            oninput="markDirty('no_${r.row}','btn_no_${r.row}')">
+          <button id="btn_no_${r.row}" class="btn btn-disabled" disabled
+            onclick="save(${r.row},'nosurat','no_${r.row}','btn_no_${r.row}')">
+            Simpan
+          </button>
+          <div class="small">Perlu disimpan</div>
         </td>
       </tr>`;
   });
+
   document.getElementById("notif").innerHTML =
     res.pending>0 ? `<div class="notice">⚠️ Ada ${res.pending} KGB belum dikerjakan</div>` : "";
+
   document.getElementById("loading").style.display="none";
 }
 
-function update(row,field,value){
+function markDirty(inputId, btnId){
+  const btn=document.getElementById(btnId);
+  btn.disabled=false;
+  btn.className="btn btn-save";
+}
+
+function save(row, field, inputId, btnId){
+  const value=document.getElementById(inputId).value;
+  const btn=document.getElementById(btnId);
+  btn.disabled=true;
+  btn.textContent="Menyimpan…";
+
   fetch(GAS_URL,{
     method:"POST",
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({row,field,value})
-  }).then(r=>r.json()).then(res=>{
-    if(!res.success) alert("Gagal menyimpan ke Sheet");
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.success){
+      btn.textContent="Tersimpan";
+      btn.className="btn btn-disabled";
+    }else{
+      alert("Gagal menyimpan");
+      btn.textContent="Simpan";
+      btn.disabled=false;
+      btn.className="btn btn-save";
+    }
   });
 }
+
 function next(){page++;load()}
 function prev(){if(page>1){page--;load()}}
 function search(){q=document.getElementById("q").value;page=1;load()}
