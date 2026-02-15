@@ -5,178 +5,66 @@
 <title>Dashboard Gaji Berkala</title>
 
 <style>
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont;
-  background:#f6f8fa;
-}
+body{margin:0;font-family:system-ui;background:#f6f8fa}
 header{
-  background:#24292f;
-  color:#fff;
-  padding:16px 40px;
-  display:flex;
-  align-items:center;
-  gap:16px;
+  background:#24292f;color:#fff;padding:14px 40px;
+  display:flex;align-items:center;justify-content:space-between
 }
+.left{display:flex;align-items:center;gap:14px}
 header a{
-  background:#0969da;
-  color:#fff;
-  text-decoration:none;
-  padding:8px 14px;
-  border-radius:6px;
-  font-weight:600;
+  background:#0969da;color:#fff;text-decoration:none;
+  padding:8px 14px;border-radius:6px;font-weight:600
 }
-.container{ padding:24px 40px; }
-
-.toolbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:14px;
+.right a{
+  background:#2da44e;color:#fff;text-decoration:none;
+  padding:8px 14px;border-radius:6px;font-weight:600;margin-left:8px
 }
-
-.search input{
-  width:300px;
-  padding:8px 12px;
-  border:1px solid #d0d7de;
-  border-radius:6px;
-}
-
-.notice{
-  background:#fff3cd;
-  color:#664d03;
-  padding:10px 16px;
-  border-radius:6px;
-  font-weight:600;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:#fff;
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
-}
-
-th{
-  background:#0969da;
-  color:#fff;
-  padding:12px;
-  text-align:left;
-}
-
-td{
-  padding:10px;
-  border-bottom:1px solid #eaecef;
-  vertical-align:top;
-}
-
-tr:hover{ background:#f0f6fc; }
-
-input,select{
-  width:100%;
-  padding:7px;
-  border:1px solid #d0d7de;
-  border-radius:6px;
-}
-
-.badge{
-  background:#ddf4ff;
-  color:#0969da;
-  padding:4px 8px;
-  border-radius:20px;
-  font-size:13px;
-}
-
-.btn{
-  margin-top:6px;
-  padding:6px 10px;
-  border-radius:6px;
-  border:none;
-  cursor:pointer;
-  font-weight:600;
-}
-
-.btn-save{
-  background:#2da44e;
-  color:#fff;
-}
-
-.btn-disabled{
-  background:#94d3a2;
-  color:#fff;
-  cursor:not-allowed;
-}
-
-.btn-folder{
-  background:#2da44e;
-  color:#fff;
-  padding:6px 12px;
-  border-radius:6px;
-  text-decoration:none;
-}
-
-.paging{
-  text-align:right;
-  margin-top:12px;
-}
-
-.paging button{
-  padding:6px 12px;
-  border:1px solid #d0d7de;
-  border-radius:6px;
-  background:#fff;
-  cursor:pointer;
-}
-
-.small{
-  font-size:12px;
-  color:#57606a;
-  margin-top:4px;
-}
-
+.container{padding:24px 40px}
+.search input{width:300px;padding:8px;border:1px solid #d0d7de;border-radius:6px}
+.notice{background:#fff3cd;color:#664d03;padding:10px 16px;border-radius:6px;font-weight:600}
+table{width:100%;border-collapse:collapse;background:#fff;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+th{background:#0969da;color:#fff;padding:12px;text-align:left}
+td{padding:10px;border-bottom:1px solid #eaecef}
+input,select{width:100%;padding:7px;border:1px solid #d0d7de;border-radius:6px}
+.btn{margin-top:6px;padding:6px 10px;border-radius:6px;border:none;font-weight:600;cursor:pointer}
+.btn-save{background:#2da44e;color:#fff}
+.btn-disabled{background:#94d3a2;color:#fff}
+.paging{text-align:right;margin-top:12px}
 #loading{
-  position:fixed;
-  inset:0;
-  background:rgba(255,255,255,.85);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  font-weight:600;
-  z-index:99;
+  position:fixed;inset:0;background:rgba(255,255,255,.85);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:600
 }
 </style>
 </head>
 
 <body>
-
-<div id="loading">Loading Dashboard Gaji Berkala…</div>
+<div id="loading">Loading Dashboard…</div>
 
 <header>
-  <a href="https://rikoantah.github.io/Dasboard-Kepegawaian/">⬅ Back</a>
-  <h2>Dashboard Gaji Berkala</h2>
+  <div class="left">
+    <a href="https://rikoantah.github.io/Dasboard-Kepegawaian/">⬅ Back</a>
+    <h2>Dashboard Gaji Berkala</h2>
+  </div>
+  <div class="right">
+    <a target="_blank" href="https://script.google.com/macros/s/AKfycbw7UwgamSpUsRNJwB_1eS6_7LRcOlGMh7jZDKoOqw89LAJaly0aGiFNV13F7lhtNR91/exec">
+      Proses KGB Internal
+    </a>
+    <a target="_blank" href="https://script.google.com/macros/s/AKfycbynnJKt2aI6upYarzM4OxANvRh6hFTlYodVpeph5mcfgK7fKb2KEuFsAGhRxA2t9AgNJw/exec">
+      Pengantar BKD
+    </a>
+  </div>
 </header>
 
 <div class="container">
-
-  <div class="toolbar">
-    <div class="search">
-      <input id="q" placeholder="Cari berdasarkan Nama…" onkeyup="search()">
-    </div>
-    <div id="notif"></div>
-  </div>
+  <input class="search" id="q" placeholder="Cari Nama…" onkeyup="search()">
+  <div id="notif"></div>
 
   <table>
     <thead>
       <tr>
-        <th>Nama</th>
-        <th>NIP</th>
-        <th>Gol</th>
-        <th>Jabatan</th>
-        <th>Folder</th>
-        <th>Waktu</th>
-        <th>Catatan Verifikator</th>
-        <th>No Surat</th>
+        <th>Nama</th><th>NIP</th><th>Gol</th><th>Jabatan</th>
+        <th>Waktu</th><th>Catatan</th><th>No Surat</th>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
@@ -186,121 +74,73 @@ input,select{
     <button onclick="prev()">Prev</button>
     <button onclick="next()">Next</button>
   </div>
-
 </div>
 
 <script>
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyGKqtFU873p8ENrhSa9q6HIwvqgHyOwGezgv5AzwYG83V1voR1yqlj08J2L054kx19/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwd3Tp5nv7U6Wn4lKGLkTRYlFYLDIDYTDF-AKsthe9d6FR7mrNhDCGHuyPhodqrMVTi/exec";
+let page=1,q="",DROPDOWN=[];
 
-let page = 1;
-let q = "";
-let DROPDOWN = [];
-
-/* INIT */
 Promise.all([
-  fetch(GAS_URL + "?type=dropdown").then(r=>r.json()),
+  fetch(GAS_URL+"?type=dropdown").then(r=>r.json()),
   load()
-]).then(d => DROPDOWN = d[0]);
+]).then(d=>DROPDOWN=d[0]);
 
 function load(){
   document.getElementById("loading").style.display="flex";
-  return fetch(`${GAS_URL}?page=${page}&q=${encodeURIComponent(q)}`)
+  fetch(`${GAS_URL}?page=${page}&q=${encodeURIComponent(q)}`)
     .then(r=>r.json())
     .then(draw);
 }
 
 function draw(res){
-  const tb = document.getElementById("tbody");
-  tb.innerHTML = "";
-
+  const tb=document.getElementById("tbody");
+  tb.innerHTML="";
   res.rows.forEach(r=>{
-    tb.innerHTML += `
-      <tr>
-        <td><b>${r.nama}</b></td>
-        <td>${r.nip}</td>
-        <td><span class="badge">${r.gol}</span></td>
-        <td>${r.jabatan}</td>
-        <td>${r.folder ? `<a class="btn-folder" target="_blank" href="${r.folder}">Buka</a>` : "-"}</td>
-        <td>${r.waktu || "-"}</td>
-
-        <td>
-          <select id="cat_${r.row}" onchange="markDirty('btn_cat_${r.row}')">
-            ${DROPDOWN.map(d=>`<option ${d===r.catatan?'selected':''}>${d}</option>`).join("")}
-          </select>
-          <button id="btn_cat_${r.row}" class="btn btn-disabled" disabled
-            onclick="save(${r.row},'catatan','cat_${r.row}','btn_cat_${r.row}')">
-            Simpan
-          </button>
-          <div class="small">Klik simpan untuk menyimpan</div>
-        </td>
-
-        <td>
-          <input id="no_${r.row}" value="${r.nosurat||""}"
-            oninput="markDirty('btn_no_${r.row}')">
-          <button id="btn_no_${r.row}" class="btn btn-disabled" disabled
-            onclick="save(${r.row},'nosurat','no_${r.row}','btn_no_${r.row}')">
-            Simpan
-          </button>
-          <div class="small">Klik simpan untuk menyimpan</div>
-        </td>
-      </tr>
-    `;
+    tb.innerHTML+=`
+    <tr>
+      <td>${r.nama}</td>
+      <td>${r.nip}</td>
+      <td>${r.gol}</td>
+      <td>${r.jabatan}</td>
+      <td>${r.waktu||"-"}</td>
+      <td>
+        <select id="c${r.row}" onchange="enable('bc${r.row}')">
+          ${DROPDOWN.map(d=>`<option ${d===r.catatan?'selected':''}>${d}</option>`).join("")}
+        </select>
+        <button id="bc${r.row}" class="btn btn-save" disabled
+          onclick="save(${r.row},'catatan','c${r.row}','bc${r.row}')">Simpan</button>
+      </td>
+      <td>
+        <input id="n${r.row}" value="${r.nosurat||""}" oninput="enable('bn${r.row}')">
+        <button id="bn${r.row}" class="btn btn-save" disabled
+          onclick="save(${r.row},'nosurat','n${r.row}','bn${r.row}')">Simpan</button>
+      </td>
+    </tr>`;
   });
 
   document.getElementById("notif").innerHTML =
-    res.pending > 0
-      ? `<div class="notice">⚠️ Ada ${res.pending} KGB belum dikerjakan</div>`
-      : "";
+    res.pending>0 ? `<div class="notice">⚠️ Ada ${res.pending} KGB belum dikerjakan</div>` : "";
 
   document.getElementById("loading").style.display="none";
 }
 
-/* UI helpers */
-function markDirty(btnId){
-  const btn = document.getElementById(btnId);
-  btn.disabled = false;
-  btn.className = "btn btn-save";
+function enable(id){ document.getElementById(id).disabled=false; }
+
+function save(row,field,input,btn){
+  const v=document.getElementById(input).value;
+  const b=document.getElementById(btn);
+  b.textContent="Menyimpan…"; b.disabled=true;
+
+  fetch(`${GAS_URL}?action=save&row=${row}&field=${field}&value=${encodeURIComponent(v)}`)
+    .then(r=>r.json())
+    .then(res=>{
+      b.textContent = res.success ? "Tersimpan" : "Gagal";
+    });
 }
 
-/* SAVE – CEPAT (NO JSON, NO CORS) */
-function save(row, field, inputId, btnId){
-  const btn = document.getElementById(btnId);
-  const value = document.getElementById(inputId).value;
-
-  btn.disabled = true;
-  btn.textContent = "Menyimpan…";
-
-  const body = new URLSearchParams({ row, field, value });
-
-  fetch(GAS_URL, {
-    method: "POST",
-    body: body
-  })
-  .then(r=>r.json())
-  .then(res=>{
-    if(res.success){
-      btn.textContent = "Tersimpan";
-      btn.className = "btn btn-disabled";
-    }else{
-      alert("Gagal menyimpan");
-      btn.textContent = "Simpan";
-      btn.disabled = false;
-      btn.className = "btn btn-save";
-    }
-  })
-  .catch(()=>{
-    alert("Koneksi gagal");
-    btn.textContent = "Simpan";
-    btn.disabled = false;
-    btn.className = "btn btn-save";
-  });
-}
-
-/* Paging & Search */
-function next(){ page++; load(); }
-function prev(){ if(page>1){ page--; load(); } }
-function search(){ q = document.getElementById("q").value; page = 1; load(); }
+function next(){page++;load()}
+function prev(){if(page>1){page--;load()}}
+function search(){q=document.getElementById("q").value;page=1;load()}
 </script>
-
 </body>
 </html>
