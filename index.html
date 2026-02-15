@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Gaji Berkala</title>
+
+<style>
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,BlinkMacSystemFont;
+    background:#f6f8fa;
+    color:#24292f;
+  }
+
+  header{
+    background:#24292f;
+    color:#fff;
+    padding:20px 40px;
+    font-size:26px;
+    font-weight:600;
+  }
+
+  .container{
+    padding:30px 40px;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    font-size:15px;
+  }
+
+  th{
+    background:#0969da;
+    color:white;
+    padding:12px;
+    text-align:left;
+    position:sticky;
+    top:0;
+    z-index:1;
+  }
+
+  td{
+    padding:10px;
+    border-bottom:1px solid #eaecef;
+    vertical-align:top;
+  }
+
+  tr:hover{
+    background:#f0f6fc;
+  }
+
+  input,textarea{
+    width:100%;
+    padding:8px;
+    border:1px solid #d0d7de;
+    border-radius:6px;
+    font-size:14px;
+    font-family:inherit;
+  }
+
+  textarea{ resize:vertical; }
+
+  .btn-folder{
+    background:#2da44e;
+    color:white;
+    padding:6px 12px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:500;
+    display:inline-block;
+  }
+
+  .btn-folder:hover{
+    background:#218639;
+  }
+
+  .badge{
+    background:#ddf4ff;
+    color:#0969da;
+    padding:4px 8px;
+    border-radius:20px;
+    font-size:13px;
+  }
+</style>
+</head>
+
+<body>
+
+<header>Dashboard Gaji Berkala</header>
+
+<div class="container">
+  <table>
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>NIP</th>
+        <th>Golongan</th>
+        <th>Jabatan</th>
+        <th>Folder</th>
+        <th>Waktu Pengajuan</th>
+        <th>Catatan Verifikator</th>
+        <th>Nomor Surat</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+/* ===============================
+   URL WEB APP GAS (WAJIB INI)
+================================ */
+const GAS_URL = "https://script.google.com/macros/s/AKfycbx3Zmn5jI5ovpARNJMDSr2H5NmW4QbhbaUuDQ-TuPW1BOWUTEm9mge0fVYiDuJq_sxp/exec";
+
+/* Ambil data */
+fetch(GAS_URL)
+  .then(r => r.json())
+  .then(renderTable);
+
+function renderTable(data){
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
+
+  data.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><strong>${r.nama}</strong></td>
+      <td>${r.nip}</td>
+      <td><span class="badge">${r.gol}</span></td>
+      <td>${r.jabatan}</td>
+      <td>${r.folder ? `<a class="btn-folder" href="${r.folder}" target="_blank">Buka</a>` : "-"}</td>
+      <td>${r.waktu || "-"}</td>
+      <td>
+        <textarea onchange="updateField(${r.row},'catatan',this.value)">${r.catatan || ""}</textarea>
+      </td>
+      <td>
+        <input type="text" value="${r.nosurat || ""}"
+               onchange="updateField(${r.row},'nosurat',this.value)">
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* Update ke Sheet */
+function updateField(row, field, value){
+  fetch(GAS_URL, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ row, field, value })
+  });
+}
+</script>
+
+</body>
+</html>
