@@ -107,11 +107,15 @@ function draw(res){
         <td>${r.waktu||"-"}</td>
         <td>
           <select id="c${r.row}" onchange="enable('bc${r.row}')">
-            ${DROPDOWN.map(d=>`<option ${d===r.catatan?'selected':''}>${d}</option>`).join("")}
-          </select>
-          <button id="bc${r.row}" class="btn btn-save" disabled
-            onclick="save(${r.row},'catatan','c${r.row}','bc${r.row}')">Simpan</button>
-        </td>
+  ${DROPDOWN.map(d => `
+    <option ${d === r.catatan ? 'selected' : ''}>${d}</option>
+  `).join("")}
+</select>
+
+<button id="bc${r.row}" class="btn btn-save" disabled
+  onclick="save(${r.row}, 'catatan', 'c${r.row}', 'bc${r.row}')">
+  Simpan
+</button>
         <td>
           <input id="n${r.row}" value="${r.nosurat||""}" oninput="enable('bn${r.row}')">
           <button id="bn${r.row}" class="btn btn-save" disabled
