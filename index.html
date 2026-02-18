@@ -92,38 +92,41 @@ function load(){
     .then(draw);
 }
 
-function draw(res){
-  const tb=document.getElementById("tbody");
-  tb.innerHTML="";
+res.rows.forEach(r=>{
+  tb.innerHTML+=`
+    <tr>
+      <td>${r.nama}</td>
+      <td>${r.nip}</td>
+      <td>${r.gol}</td>
+      <td>${r.jabatan}</td>
+      <td>${r.status || "-"}</td>
+      <td>${r.waktu || "-"}</td>
 
-  res.rows.forEach(r=>{
-    tb.innerHTML+=`
-      <tr>
-        <td>${r.nama}</td>
-        <td>${r.nip}</td>
-        <td>${r.gol}</td>
-        <td>${r.jabatan}</td>
-        <td>${r.status||"-"}</td>
-        <td>${r.waktu||"-"}</td>
-        <td>
-          <select id="c${r.row}" onchange="enable('bc${r.row}')">
-  ${DROPDOWN.map(d => `
-    <option ${d === r.catatan ? 'selected' : ''}>${d}</option>
-  `).join("")}
-</select>
+      <td>
+        <select id="c${r.row}" onchange="enable('bc${r.row}')">
+          ${r.catatan ? '' : '<option value="">-- Pilih Catatan --</option>'}
+          ${DROPDOWN.map(d => `
+            <option ${d === r.catatan ? 'selected' : ''}>${d}</option>
+          `).join("")}
+        </select>
 
-<button id="bc${r.row}" class="btn btn-save" disabled
-  onclick="save(${r.row}, 'catatan', 'c${r.row}', 'bc${r.row}')">
-  Simpan
-</button>
-        <td>
-          <input id="n${r.row}" value="${r.nosurat||""}" oninput="enable('bn${r.row}')">
-          <button id="bn${r.row}" class="btn btn-save" disabled
-            onclick="save(${r.row},'nosurat','n${r.row}','bn${r.row}')">Simpan</button>
-        </td>
-      </tr>`;
-  });
+        <button id="bc${r.row}" class="btn btn-save" disabled
+          onclick="save(${r.row}, 'catatan', 'c${r.row}', 'bc${r.row}')">
+          Simpan
+        </button>
+      </td>
 
+      <td>
+        <input id="n${r.row}" value="${r.nosurat || ""}"
+          oninput="enable('bn${r.row}')">
+
+        <button id="bn${r.row}" class="btn btn-save" disabled
+          onclick="save(${r.row}, 'nosurat', 'n${r.row}', 'bn${r.row}')">
+          Simpan
+        </button>
+      </td>
+    </tr>`;
+});
   document.getElementById("notif").innerHTML =
     res.pending>0
       ? `<div class="notice">⚠️ Ada ${res.pending} KGB belum dikerjakan</div>`
