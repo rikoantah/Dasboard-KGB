@@ -128,11 +128,11 @@ res.rows.forEach(r=>{
     </tr>`;
 });
   document.getElementById("notif").innerHTML =
-    res.pending>0
-      ? `<div class="notice">⚠️ Ada ${res.pending} KGB belum dikerjakan</div>`
-      : "";
+  res.pending > 0
+    ? `<div class="notice">⚠️ Ada ${res.pending} KGB belum dikerjakan</div>`
+    : "";
 
-  document.getElementById("loading").style.display="none";
+document.getElementById("loading").style.display="none";
 }
 function enable(id){ document.getElementById(id).disabled=false; }
 
